@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>樹形図 練習アプリ 完全版</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#222}header{background:#243b6b;color:#fff;padding:16px;text-align:center}h1{margin:0;font-size:22px}main{max-width:1120px;margin:0 auto;padding:16px}.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 3px 12px rgba(0,0,0,.08)}.problem-title{font-size:18px;font-weight:900;margin:8px 0;line-height:1.65;white-space:pre-line}.small{color:#666;font-size:14px;line-height:1.6}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.badge{display:inline-block;background:#eef3ff;border:1px solid #cbd8ff;padding:4px 8px;border-radius:999px;font-size:13px;font-weight:800}.quiz-box{border:2px solid #e3e6ef;border-radius:14px;padding:14px;background:#fbfcff}.step-title{font-weight:900;font-size:18px;margin-bottom:8px}input[type=number]{width:95px;padding:10px;border:2px solid #cbd3e0;border-radius:10px;font-size:18px;font-weight:900;text-align:center}button{border:none;border-radius:10px;padding:11px 16px;font-weight:900;cursor:pointer;background:#243b6b;color:white;font-size:15px}button.secondary{background:#666}button.good{background:#1e9b50}button:disabled{background:#aaa;cursor:not-allowed}.result{font-weight:900;font-size:17px;margin-top:12px;line-height:1.6}.tree-wrap{overflow:auto;border:1px solid #e3e6ef;border-radius:14px;background:#fbfcff;padding:8px;margin-top:10px;max-height:72vh}svg{min-width:980px;width:100%;height:auto;display:block}.branch{stroke:#8c98ad;stroke-width:4;fill:none;stroke-linecap:round}.branch-focus{stroke:#ff8a00;stroke-width:6;fill:none;stroke-linecap:round}.start-rect{fill:#fff3d7;stroke:#ffd36c;stroke-width:2;rx:12}.node-rect{fill:#eef3ff;stroke:#cbd8ff;stroke-width:2;rx:12}.slot-rect{fill:#fff;stroke:#8b94a7;stroke-width:3;stroke-dasharray:8 5;rx:12;cursor:pointer}.slot-rect.filled{stroke:#243b6b;fill:#fff;stroke-dasharray:0}.slot-rect.locked{stroke:#cbd8ff;fill:#f7f9ff;stroke-dasharray:0}.node-text{font-size:17px;font-weight:900;text-anchor:middle;dominant-baseline:middle;pointer-events:none}.hint-text{font-size:12px;fill:#6b7280;text-anchor:middle;dominant-baseline:middle;pointer-events:none}.slot-group{cursor:pointer}.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.chip{padding:10px 16px;border-radius:999px;border:2px solid #243b6b;background:#fff;color:#243b6b;font-weight:900;cursor:grab;user-select:none;min-width:52px;text-align:center}.chip.selected{background:#243b6b;color:#fff}.explanation{display:none;background:#f7f7f7;border-left:5px solid #243b6b;padding:12px;margin-top:12px;border-radius:8px;line-height:1.75}.hidden{display:none}.notice{background:#fff8df;border:1px solid #f1d37a;border-radius:12px;padding:10px;margin-top:10px;font-weight:800;color:#6b5200}.hintBox{display:none;background:#eef7ff;border-left:5px solid #2d6cdf;border-radius:10px;padding:10px;margin-top:10px;line-height:1.6;font-weight:800;color:#163f7a}.currentBox{background:#edfdf4;border:1px solid #89d5a5;border-radius:12px;padding:10px;margin-top:10px;font-weight:900;color:#12602f}.current-dot{fill:#ff8a00;stroke:#fff;stroke-width:4}.current-ring{fill:none;stroke:#ff8a00;stroke-width:4;stroke-dasharray:6 5}.current-label{font-size:14px;fill:#ff8a00;font-weight:900;text-anchor:middle}.progress{font-weight:900;color:#243b6b;margin-top:6px}.layer-label-bg{fill:#fff;stroke:#cbd8ff;stroke-width:2;rx:12}.layer-label-bg.active{fill:#fff3d7;stroke:#ff8a00;stroke-width:3}.layer-title{font-size:15px;font-weight:900;text-anchor:middle;dominant-baseline:middle;fill:#243b6b}.layer-title.active{fill:#c45a00}.layer-caption{font-size:12px;font-weight:800;text-anchor:middle;dominant-baseline:middle;fill:#666}.active-column{fill:#fff8df;stroke:#ff8a00;stroke-width:2;stroke-dasharray:8 5;rx:18}.arrow-note{font-size:13px;font-weight:900;fill:#ff8a00;text-anchor:middle}.selectWrap{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.selectWrap select{padding:10px;border-radius:10px;border:2px solid #cbd3e0;font-weight:800;background:white;max-width:260px}.finalInput{width:120px!important}.summary{background:#edfdf4;border-left:5px solid #1e9b50;padding:12px;border-radius:10px;margin-top:10px;line-height:1.75;font-weight:900}.modeTag{display:inline-block;margin-right:6px;margin-top:6px;padding:4px 8px;border-radius:999px;background:#fff3d7;border:1px solid #ffd36c;font-weight:900;color:#6b5200}.mini{font-size:12px;color:#777}.footerBtns{position:sticky;bottom:0;background:rgba(245,247,251,.95);padding:8px 0}@media(max-width:700px){main{padding:10px}h1{font-size:19px}.card{padding:12px}svg{min-width:980px}.chip{padding:9px 14px}.tree-wrap{max-height:68vh}}
+</style>
+</head>
+<body>
+<header><h1>樹形図 練習アプリ 完全版</h1></header>
+<main>
+<section class="card"><div class="row" style="justify-content:space-between;align-items:flex-start"><div style="max-width:760px"><span class="badge" id="qBadge"></span><span class="modeTag" id="levelTag"></span><div class="problem-title" id="questionText"></div><div class="small" id="guideText"></div></div><div><div class="small" id="scoreText"></div><div class="selectWrap"><span class="small">問題選択</span><select id="problemSelect" onchange="jumpQuestion()"></select></div></div></div></section>
+<section class="card" id="stepCard"><div class="quiz-box" id="quizBox"></div></section>
+<section class="card hidden" id="choiceCard"><div class="step-title" id="choiceTitle"></div><div class="small" id="choiceGuide"></div><div class="chips" id="chips"></div><div class="row" style="margin-top:12px"><button onclick="checkCurrentPlacement()">配置を確認</button><button class="secondary" onclick="clearCurrentSlots()">入れ直す</button></div><div class="result" id="placeResult"></div></section>
+<section class="card"><div class="step-title">樹形図</div><div class="small">各階層に「何を選んでいるか」を表示します。操作中の階層と現在地点だけをオレンジ色で強調します。3階層で枝が多い時はマスを自動で小さくします。</div><div class="tree-wrap"><svg id="treeSvg" viewBox="0 0 1000 700"></svg></div></section>
+<section class="card hidden" id="finalCard"><div class="step-title">最後の確認</div><div class="result" id="slotResult"></div><div class="explanation" id="explanation"></div></section>
+<section class="card footerBtns"><div class="row"><button onclick="nextQuestion()">次の問題</button><button class="secondary" onclick="resetQuestion()">この問題をやり直す</button></div></section>
+</main>
+<script>
+const praise=[
+ 'すごい！ゴリラ校長も拍手しています！','天才！うんち博士レベルが1上がりました！','やったね！おならパワー100点！','いいね！忍者マスターに近づきました！','ナイス！ドラゴンも仲間になりたそうです！','よく読めています！問題文の名探偵です！','完璧！給食のプリンを守れるレベルです！','すばらしい！変顔チャンピオンもびっくり！'
+];
+function randPraise(){return praise[Math.floor(Math.random()*praise.length)]}
+function esc(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
+function fact(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r}
+function perm(n,k){let r=1;for(let i=0;i<k;i++)r*=n-i;return r}
+function comb(n,k){return fact(n)/(fact(k)*fact(n-k))}
+function makeProblem(o){
+ const roles=o.roles, k=roles.length, items=o.items;
+ let mode=o.mode||'ordered';
+ let answer=0, ruleAnswer='違う', ruleExplain='役割や場所が違うので、入れ替えると別のものとして考えます。';
+ if(mode==='unordered'){answer=comb(items.length,k); ruleAnswer='同じ'; ruleExplain='今回は選ぶだけで、役割や順番の違いはありません。入れ替えても同じ組です。';}
+ else if(mode==='repeat'){answer=Math.pow(items.length,k);}
+ else {answer=perm(items.length,k);}
+ const sampleA=items[0], sampleB=items[1]||items[0];
+ const rule = mode==='unordered' ? `${sampleA}・${sampleB} と ${sampleB}・${sampleA} は、同じ組として考えますか？` : `${roles[0]}が${sampleA}、${roles[1]||roles[0]}が${sampleB} と、${roles[0]}が${sampleB}、${roles[1]||roles[0]}が${sampleA} は、同じとして考えますか？`;
+ const noRepeat = mode==='repeat' ? '同じものを何回選んでもOKです。' : (mode==='unordered' ? '同じものは2回選びません。選ぶ順番は考えません。' : '同じものは2回選べません。');
+ return {title:o.title, tag:o.tag, mode, roles, items, q:`${o.story}\n\n${items.join('・')} の中から、${roles.join('、')}を決めます。\n${noRepeat}\n全部で何通りありますか？`, rule, ruleChoices:['同じ','違う'], ruleAnswer, ruleExplain, answer, explain:o.explain||'', level:o.level||`${k}階層`};
+}
+const storySets=[
+ {tag:'うんち・おなら学園',items:['うんちマン','おならマン','ゲップマン','鼻水マン'],story:'うんち・おなら学園で、朝からなぜか校長先生のイスがプーッと鳴りました。犯人ではなく、係を決めます。'},
+ {tag:'動物園パニック',items:['サル','ゴリラ','カバ','ライオン'],story:'動物園でサルが園長のバナナを持って逃げました。ゴリラはなぜか反省文を書いています。'},
+ {tag:'忍者学校',items:['赤忍者','青忍者','黄忍者','黒忍者'],story:'忍者学校で、校長のまきびしが全部ラムネにすり替わりました。任務チームを決めます。'},
+ {tag:'ゲームパーティー',items:['スライム','ドラゴン','ゴブリン','ホネ戦士'],story:'ゲームの世界で、ラスボスが寝坊しました。先に冒険チームを決めます。'},
+ {tag:'学校あるある',items:['給食係','図書係','体育係','放送係'],story:'学校で給食のプリンが1個多く届きました。なぜか全員が急にまじめな顔をしています。'},
+ {tag:'変顔コンテスト',items:['への字口','びっくり目','たこ口','まゆげ消失'],story:'変顔コンテストで、先生が笑いすぎて黒板に日付を書き忘れました。'},
+ {tag:'給食レンジャー',items:['牛乳マン','カレー隊長','プリン侍','パン大臣'],story:'給食レンジャーが出動します。今日の敵は「おかわりを独り占めする大魔王」です。'},
+ {tag:'宇宙遠足',items:['タコ星人','イカ星人','クラゲ星人','ナマコ星人'],story:'宇宙遠足で、バスの代わりに巨大たこ焼きロケットに乗ることになりました。'},
+ {tag:'妖怪町内会',items:['ぬりかべ','からかさ','一つ目小僧','ろくろ首'],story:'妖怪町内会で、夜中にラジオ体操をする係を決めます。近所の犬だけが真剣です。'},
+ {tag:'おばけ屋敷',items:['白おばけ','透明おばけ','泣き虫おばけ','ダンスおばけ'],story:'おばけ屋敷で、驚かすはずのおばけが逆にお客さんに驚いています。'}
+];
+const rolePairs=[['隊長','副隊長'],['代表','副代表'],['前に立つ人','後ろに立つ人'],['1番目','2番目'],['見張り係','連絡係']];
+const roleTriples=[['隊長','副隊長','書記'],['1番目','2番目','3番目'],['前衛','中衛','後衛'],['リーダー','サブリーダー','応援係'],['見張り係','連絡係','記録係']];
+function buildProblems(){
+ const list=[];
+ storySets.forEach((s,i)=>{list.push(makeProblem({tag:s.tag,title:s.tag+' 2階層',story:s.story,items:s.items.slice(0,3),roles:rolePairs[i%rolePairs.length],mode:'ordered',level:'レベル1：2階層・順番あり'}));});
+ storySets.forEach((s,i)=>{list.push(makeProblem({tag:s.tag,title:s.tag+' コンビ',story:s.story,items:s.items.slice(0,3),roles:['1人目に選ぶもの','2人目に選ぶもの'],mode:'unordered',level:'レベル2：2階層・順番なし'}));});
+ storySets.forEach((s,i)=>{list.push(makeProblem({tag:s.tag,title:s.tag+' 4人順番',story:s.story,items:s.items,roles:rolePairs[(i+2)%rolePairs.length],mode:'ordered',level:'レベル3：2階層・枝多め'}));});
+ storySets.forEach((s,i)=>{list.push(makeProblem({tag:s.tag,title:s.tag+' 3階層',story:s.story,items:s.items.slice(0,4),roles:roleTriples[i%roleTriples.length],mode:'ordered',level:'レベル4：3階層・順番あり'}));});
+ storySets.forEach((s,i)=>{list.push(makeProblem({tag:s.tag,title:s.tag+' 3回OK',story:s.story,items:s.items.slice(0,3),roles:roleTriples[(i+1)%roleTriples.length],mode:'repeat',level:'レベル5：3階層・同じものOK'}));});
+ const extra=[];
+ for(let round=0; round<5; round++){
+   storySets.forEach((s,i)=>{
+    const use4 = (round+i)%2===0;
+    const mode = round%5===0?'unordered':(round%4===0?'repeat':'ordered');
+    const roles = (round%3===0)?roleTriples[(i+round)%roleTriples.length]:rolePairs[(i+round)%rolePairs.length];
+    if(mode==='unordered' && roles.length>2) return;
+    extra.push(makeProblem({tag:s.tag,title:`${s.tag} ミッション${round+1}`,story:s.story,items:use4?s.items:s.items.slice(0,3),roles,mode,level:roles.length===3?'3階層チャレンジ':'2階層チャレンジ'}));
+   });
+ }
+ return list.concat(extra).slice(0,100);
+}
+const problems=buildProblems();
+let idx=0,score=0,stage='ruleCheck',selected=null,filled={},currentPath=[],currentDepth=0,attempts={};
+const svg=document.getElementById('treeSvg');
+function p(){return problems[idx]}
+function keyFor(path,depth){return path.join('>')+'|'+depth}
+function optionList(path,depth){
+ const pr=p(), items=pr.items;
+ if(depth>=pr.roles.length) return [];
+ if(pr.mode==='repeat') return [...items];
+ if(pr.mode==='unordered'){
+   if(depth===0) return items.slice(0, Math.max(0, items.length-pr.roles.length+1));
+   const last=items.indexOf(path[path.length-1]);
+   return items.slice(last+1, Math.max(last+1, items.length-(pr.roles.length-depth-1)));
+ }
+ return items.filter(x=>!path.includes(x));
+}
+function allChoices(){return [...p().items]}
+function answerText(){
+ const pr=p(), n=pr.items.length, k=pr.roles.length;
+ if(pr.mode==='unordered') return `順番を考えないので、同じ組を2回数えません。全部で ${pr.answer} 通りです。`;
+ if(pr.mode==='repeat') return `同じものを使ってよいので、各階層で ${n} 通りずつ選べます。${Array(k).fill(n).join('×')}=${pr.answer} 通りです。`;
+ const nums=[];for(let i=0;i<k;i++)nums.push(n-i);
+ return `同じものは2回使えないので、枝の数は ${nums.join('→')} と減ります。${nums.join('×')}=${pr.answer} 通りです。`;
+}
+function setupSelect(){const sel=document.getElementById('problemSelect');sel.innerHTML=problems.map((q,i)=>`<option value="${i}">問題${i+1}：${esc(q.tag)} ${q.roles.length}階層</option>`).join('')}
+function init(){stage='ruleCheck';selected=null;filled={};currentPath=[];currentDepth=0;attempts={};document.getElementById('choiceCard').classList.add('hidden');document.getElementById('finalCard').classList.add('hidden');document.getElementById('placeResult').textContent='';document.getElementById('slotResult').textContent='';document.getElementById('explanation').style.display='none';document.getElementById('qBadge').textContent=`問題 ${idx+1} / ${problems.length}`;document.getElementById('levelTag').textContent=p().level;document.getElementById('questionText').textContent=p().q;document.getElementById('scoreText').textContent=`正解 ${score}問`;document.getElementById('guideText').textContent='問題文を読んで、まず「順番を考えるか」を判断しましょう。';document.getElementById('problemSelect').value=idx;renderQuiz();renderTree();}
+function showHint(msg){const h=document.getElementById('hintBox');if(h){h.textContent='ヒント：'+msg;h.style.display='block';}}
+function setResult(text,color='#1e9b50'){const r=document.getElementById('stepResult'); if(r){r.innerHTML=text;r.style.color=color;}}
+function layerOptions(depth){const correct=p().roles[depth]; const pool=[correct,...p().roles.filter(x=>x!==correct),'全部の通り数','答えの数','前に選んだもの']; return [...new Set(pool)].slice(0,4)}
+function currentPlaceLabel(){return currentPath.length?`「${currentPath.join(' → ')}」の後`:'スタート地点'}
+function renderQuiz(){const box=document.getElementById('quizBox'); const pr=p();
+ if(stage==='ruleCheck'){box.innerHTML=`<div class="step-title">① 問題文の意味を確認</div><div class="small">枝を書く前に、「順番を考える問題」か「順番を考えない問題」かを判断します。</div><div class="currentBox">現在地点：まだ樹形図は書きません。まず問題のルールを読み取ります。</div><div style="font-weight:900;margin-top:12px">${esc(pr.rule)}</div><div class="hintBox" id="hintBox"></div><div class="row" style="margin-top:12px">${pr.ruleChoices.map(c=>`<button onclick="checkRule('${c}')">${c}</button>`).join('')}</div><div class="result" id="stepResult"></div>`;return;}
+ if(stage==='layerCheck'){const opts=layerOptions(currentDepth);box.innerHTML=`<div class="step-title">② 階層確認：ここでは何を選びますか？</div><div class="small">枝の数を答える前に、今の階層で何を選んでいるのかを確認します。</div><div class="progress">${currentDepth+1}階層目 / ${pr.roles.length}階層中</div><div class="currentBox">現在地点：${esc(currentPlaceLabel())}です。ここから何を選ぶか考えます。</div><div class="hintBox" id="hintBox"></div><div class="row" style="margin-top:12px">${opts.map(o=>`<button onclick="checkLayer('${esc(o)}')">${esc(o)}</button>`).join('')}</div><div class="result" id="stepResult"></div>`;return;}
+ if(stage==='countCheck'){const role=pr.roles[currentDepth], opts=optionList(currentPath,currentDepth);box.innerHTML=`<div class="step-title">③ 「${esc(role)}」の枝は何本？</div><div class="small">今は <b>${esc(currentPlaceLabel())}</b> から、<b>${esc(role)}</b> を選びます。選べるものが何個あるかを数えます。</div><div class="progress">${currentDepth+1}階層目 / ${pr.roles.length}階層中</div><div class="currentBox">現在地点：${esc(currentPlaceLabel())} → ${esc(role)}を選ぶ</div><div class="hintBox" id="hintBox"></div><div class="row" style="margin-top:12px"><label><b>${esc(role)}の枝</b>：<input id="countInput" type="number" min="0"> 本</label><button onclick="checkCount()">答えて枝を書く</button></div><div class="result" id="stepResult"></div>`;return;}
+ if(stage==='place'){const role=pr.roles[currentDepth];box.innerHTML=`<div class="step-title">④ 枝に名前を入れる</div><div class="small">今は <b>${esc(currentPlaceLabel())}</b> から出る <b>${esc(role)}</b> の枝だけを考えます。</div><div class="progress">${currentDepth+1}階層目 / ${pr.roles.length}階層中</div><div class="currentBox">現在地点：${esc(currentPlaceLabel())} → ${esc(role)}を配置</div><div class="notice">配置できたら「配置を確認」を押してください。</div><div class="hintBox" id="hintBox"></div>`;return;}
+ if(stage==='finalQuestion'){box.innerHTML=`<div class="step-title">⑤ 最後に、全部で何通り？</div><div class="small">樹形図の一番右端にある「できあがり」の数を数えます。</div><div class="currentBox">現在地点：樹形図の右端です。右端の完成パターンの数が答えです。</div><div class="hintBox" id="hintBox"></div><div class="row" style="margin-top:12px"><label><b>全部で</b> <input id="finalInput" class="finalInput" type="number" min="0"> 通り</label><button onclick="checkFinalAnswer()">答えを確認</button></div><div class="result" id="stepResult"></div>`;return;}
+ box.innerHTML=`<div class="step-title">完成</div><div class="small">よく最後まで考えました。</div>`;
+}
+function checkRule(choice){if(choice===p().ruleAnswer){setResult(`${randPraise()}<br>問題文の意味を正しく読み取れました。`,'#1e9b50');setTimeout(()=>{stage='layerCheck';renderQuiz();renderTree();document.getElementById('guideText').textContent='次に、今の階層で何を選んでいるのかを確認しましょう。';},450);}else{attempts.rule=(attempts.rule||0)+1;setResult('惜しいです。もう一度、問題文の意味を確認しましょう。','#d74b4b');showHint(attempts.rule===1?'「役割」や「順番」が変わると別のものになるかを考えます。':'今回は、'+p().ruleExplain);}}
+function checkLayer(choice){const correct=p().roles[currentDepth]; if(choice===correct){setResult(`${randPraise()}<br>${currentDepth+1}階層目では「${esc(correct)}」を選ぶと分かりました。`,'#1e9b50');setTimeout(()=>{stage='countCheck';renderQuiz();renderTree();document.getElementById('guideText').textContent=`では「${correct}」として選べるものの数を考えましょう。`;},450);}else{const key='layer'+currentDepth+currentPath.join('>');attempts[key]=(attempts[key]||0)+1;setResult('惜しいです。問題文の中で、この階層にあたる言葉を探しましょう。','#d74b4b');showHint(attempts[key]===1?`今は ${currentDepth+1}階層目です。${currentPlaceLabel()}から次に決めるものを探します。`:`この階層では「${correct}」を選びます。`);}}
+function checkCount(){const v=Number(document.getElementById('countInput').value); const opts=optionList(currentPath,currentDepth); if(v===opts.length){setResult(`${randPraise()}<br>枝の数を正しく考えられました。`,'#1e9b50');stage='place';renderTree();renderQuiz();showChoice();document.getElementById('guideText').textContent='枝が描けました。次は、枝に入るものを配置しましょう。';}else{const key='count'+currentDepth+currentPath.join('>');attempts[key]=(attempts[key]||0)+1;setResult('もう一度考えましょう。','#d74b4b');showHint(attempts[key]===1?`今いる場所は「${currentPlaceLabel()}」です。ここから選べるものだけを数えましょう。`:`選べるものは「${opts.join('・')||'ありません'}」です。`);}}
+function showChoice(){document.getElementById('choiceCard').classList.remove('hidden');document.getElementById('placeResult').textContent='';document.getElementById('choiceTitle').textContent=`${currentDepth+1}階層目：「${p().roles[currentDepth]}」を配置`;document.getElementById('choiceGuide').textContent=`カードをドラッグして、樹形図の□に入れましょう。スマホは「カードをタップ→□をタップ」でもできます。現在地点：${currentPlaceLabel()}`;document.getElementById('chips').innerHTML=allChoices().map(v=>`<div class="chip" draggable="true" onclick="selectChip('${esc(v)}')" ondragstart="drag(event,'${esc(v)}')">${esc(v)}</div>`).join('');}
+function selectChip(v){selected=v;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('selected',c.textContent===v));}
+function drag(e,v){selected=v;e.dataTransfer.setData('text/plain',v)}
+function place(slotId){if(!selected||stage!=='place')return; if(!slotId.startsWith(keyFor(currentPath,currentDepth)+'#'))return; filled[slotId]=selected;renderTree();showChoice();selectChip(selected)}
+function clearCurrentSlots(){const opts=optionList(currentPath,currentDepth);opts.forEach(o=>delete filled[keyFor(currentPath,currentDepth)+'#'+o]);document.getElementById('placeResult').textContent='';renderTree();showChoice();}
+function checkCurrentPlacement(){const r=document.getElementById('placeResult');const opts=optionList(currentPath,currentDepth);let ok=true;opts.forEach(o=>{if(filled[keyFor(currentPath,currentDepth)+'#'+o]!==o)ok=false;});if(ok){r.textContent=randPraise()+' 正しく配置できました。';r.style.color='#1e9b50';setTimeout(()=>advanceAfterPlacement(),450);}else{const key='place'+currentDepth+currentPath.join('>');attempts[key]=(attempts[key]||0)+1;r.textContent='まだ違うところがあります。';r.style.color='#d74b4b';showHint(attempts[key]===1?`現在地点は「${currentPlaceLabel()}」です。ここから選べるものを1つずつ入れます。`:`ここに入るのは「${opts.join('・')}」です。`);}}
+function advanceAfterPlacement(){document.getElementById('choiceCard').classList.add('hidden'); const pr=p(), opts=optionList(currentPath,currentDepth); if(currentDepth < pr.roles.length-1 && opts.length>0){currentPath=[...currentPath, opts[0]]; currentDepth++; stage='layerCheck'; renderTree(); renderQuiz(); document.getElementById('guideText').textContent=`次は「${currentPath.join(' → ')}」の後を考えます。`; return;} let next=findNextNode(); if(next){currentPath=next.path; currentDepth=next.depth; stage='layerCheck'; renderTree(); renderQuiz(); document.getElementById('guideText').textContent=`次は「${currentPath.join(' → ')||'スタート'}」から出る枝を考えます。`; }else{stage='finalQuestion'; renderTree(); renderQuiz(); document.getElementById('guideText').textContent='樹形図が完成しました。最後に、全部で何通りか答えましょう。';}}
+function isCompleted(path,depth){const opts=optionList(path,depth); if(opts.length===0) return true; return opts.every(o=>filled[keyFor(path,depth)+'#'+o]===o)}
+function findNextNode(){const pr=p(); function dfs(path,depth){ if(depth>=pr.roles.length) return null; if(!isCompleted(path,depth)) return {path,depth}; const opts=optionList(path,depth); if(depth<pr.roles.length-1){for(const o of opts){const r=dfs([...path,o],depth+1); if(r) return r;}} return null;} return dfs([],0);}
+function checkFinalAnswer(){const v=Number(document.getElementById('finalInput').value);if(v===p().answer){setResult(`${randPraise()}<br>最後までよく考えられました。`,'#1e9b50');showFinal();}else{attempts.final=(attempts.final||0)+1;setResult('惜しいです。樹形図を見て、もう一度数えてみましょう。','#d74b4b');showHint(attempts.final===1?'樹形図の一番右端の完成パターンの数を数えます。':'右端が多い時は、各階層の枝の数をかけ算しても考えられます。');}}
+function showFinal(){stage='complete';document.getElementById('finalCard').classList.remove('hidden');document.getElementById('slotResult').innerHTML=`<div class="summary">よく最後までできました！全部で ${p().answer} 通りです。</div>`;score++;document.getElementById('scoreText').textContent=`正解 ${score}問`;document.getElementById('explanation').textContent=answerText();document.getElementById('explanation').style.display='block';renderTree();}
+function fullLeafCount(){return p().answer}
+function buildVisibleChildren(path,depth){
+ if(stage==='complete'||stage==='finalQuestion') return optionList(path,depth);
+ const k=keyFor(path,depth);
+ if(stage==='place' && path.join('>')===currentPath.join('>') && depth===currentDepth) return optionList(path,depth);
+ if(isCompleted(path,depth)) return optionList(path,depth);
+ return [];
+}
+function collectVisible(){
+ const nodes={'':{path:[],depth:-1,children:[]}}; const leaves=[]; const pr=p();
+ function rec(path,depth){
+   const parentKey=path.join('>');
+   if(depth>=pr.roles.length){leaves.push(parentKey);return;}
+   const children=buildVisibleChildren(path,depth);
+   if(children.length===0){leaves.push(parentKey);return;}
+   nodes[parentKey].children=children.map(c=>[...path,c].join('>'));
+   children.forEach(c=>{const cp=[...path,c], ck=cp.join('>'); nodes[ck]={path:cp,depth,children:[]}; rec(cp,depth+1);});
+ }
+ rec([],0);
+ return {nodes,leaves};
+}
+function renderTree(){
+ svg.innerHTML=''; const pr=p(); const {nodes,leaves}=collectVisible(); const totalLeaves=Math.max(leaves.length, Math.min(fullLeafCount(),36)); const dy= totalLeaves>24?32:(totalLeaves>14?42:60); const height=Math.max(620, 140+Math.max(leaves.length,1)*dy); const width=1020; svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
+ const marginTop=110, x0=90, colGap=260; const nodeY={}; leaves.forEach((key,i)=>nodeY[key]=marginTop+i*dy+30);
+ const sorted=Object.keys(nodes).sort((a,b)=>nodes[b].path.length-nodes[a].path.length); sorted.forEach(key=>{if(nodeY[key]==null){const ch=nodes[key].children;if(ch&&ch.length){nodeY[key]=ch.reduce((s,c)=>s+nodeY[c],0)/ch.length}else nodeY[key]=height/2;}});
+ addLayerLabel(x0,35,'スタート','まだ選んでいない',stage==='ruleCheck'); pr.roles.forEach((role,i)=>addLayerLabel(x0+(i+1)*colGap,35,`${i+1}階層目`,role,(stage!=='ruleCheck'&&currentDepth===i&&stage!=='finalQuestion'&&stage!=='complete'))); if(stage==='finalQuestion'||stage==='complete') addLayerLabel(x0+(pr.roles.length+1)*colGap-70,35,'答え','右端を数える',stage==='finalQuestion');
+ if(stage!=='ruleCheck'&&stage!=='finalQuestion'&&stage!=='complete') addColumnHighlight(x0+(currentDepth+1)*colGap,82,height-110);
+ addNode(x0,nodeY['']||height/2,'スタート','start'); if(stage==='ruleCheck') addCurrent(x0,nodeY['']||height/2,'問題文を読む');
+ Object.keys(nodes).forEach(key=>{const node=nodes[key]; const fromX=x0+(node.path.length)*colGap; const fromY=nodeY[key]; node.children.forEach(childKey=>{const child=nodes[childKey]; const toX=x0+(child.path.length)*colGap; const toY=nodeY[childKey]; const childVal=child.path[child.path.length-1]; const active = stage==='place' && key===currentPath.join('>') && node.path.length===currentDepth; addLine(fromX+58,fromY,toX-58,toY, active?'focus':''); const filledText = filled[keyFor(node.path,node.path.length)+'#'+childVal] || ((stage==='complete'||stage==='finalQuestion'||isCompleted(node.path,node.path.length))?childVal:''); addSlot(keyFor(node.path,node.path.length)+'#'+childVal,toX,toY,filledText,childVal,active,false,boxW(),boxH(),fontSize()); const role=pr.roles[node.path.length]; if(totalLeaves<28 || active) addMiniLabel(toX,toY+boxH()/2+16,role); if(active) addCurrent(toX,toY,`${role}を配置`); });});
+ if(stage==='layerCheck'||stage==='countCheck'){const x=x0+currentPath.length*colGap; const y=nodeY[currentPath.join('>')]||height/2; addCurrent(x,y,currentPath.length?`今ここ：${currentPath[currentPath.length-1]}`:'今ここ：スタート'); if(currentDepth<pr.roles.length)addArrowNote(x+120,y-28,`次は「${pr.roles[currentDepth]}」`);}
+}
+function compact(){return fullLeafCount()>18 || p().roles.length>=3}
+function boxW(){return compact()?86:120} function boxH(){return compact()?32:48} function fontSize(){return compact()?12:17}
+function addLayerLabel(x,y,title,caption,active){const g=document.createElementNS('http://www.w3.org/2000/svg','g'); const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',x-82);r.setAttribute('y',y-26);r.setAttribute('width',164);r.setAttribute('height',52);r.setAttribute('rx',12);r.setAttribute('class','layer-label-bg'+(active?' active':''));g.appendChild(r); const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y-7);t.setAttribute('class','layer-title'+(active?' active':''));t.textContent=title;g.appendChild(t); const c=document.createElementNS('http://www.w3.org/2000/svg','text');c.setAttribute('x',x);c.setAttribute('y',y+13);c.setAttribute('class','layer-caption');c.textContent=caption;g.appendChild(c);svg.appendChild(g);}
+function addColumnHighlight(x,y,h){const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',x-95);r.setAttribute('y',y);r.setAttribute('width',190);r.setAttribute('height',h);r.setAttribute('rx',18);r.setAttribute('class','active-column');svg.appendChild(r)}
+function addMiniLabel(x,y,text){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('class','hint-text');t.textContent=text;svg.appendChild(t)}
+function addArrowNote(x,y,text){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('class','arrow-note');t.textContent=text;svg.appendChild(t)}
+function addLine(xa,ya,xb,yb,cls){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',xa);l.setAttribute('y1',ya);l.setAttribute('x2',xb);l.setAttribute('y2',yb);l.setAttribute('class',cls==='focus'?'branch-focus':'branch');svg.appendChild(l)}
+function addCurrent(x,y,label){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',x);c.setAttribute('cy',y-34);c.setAttribute('r',9);c.setAttribute('class','current-dot');svg.appendChild(c);const ring=document.createElementNS('http://www.w3.org/2000/svg','circle');ring.setAttribute('cx',x);ring.setAttribute('cy',y);ring.setAttribute('r',compact()?46:66);ring.setAttribute('class','current-ring');svg.appendChild(ring);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y-52);t.setAttribute('class','current-label');t.textContent=label;svg.appendChild(t)}
+function addNode(x,y,text,type){const w=120,h=48;const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',x-w/2);r.setAttribute('y',y-h/2);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('rx',12);r.setAttribute('class',type==='start'?'start-rect':'node-rect');svg.appendChild(r);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('class','node-text');t.textContent=text;svg.appendChild(t)}
+function addSlot(id,x,y,text,correct,active,locked,w=120,h=48,fs=17){const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','slot-group');g.onclick=()=>place(id);g.addEventListener('dragover',e=>{if(active)e.preventDefault();});g.addEventListener('drop',e=>{if(active){e.preventDefault();selected=e.dataTransfer.getData('text/plain');place(id);}});const r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',x-w/2);r.setAttribute('y',y-h/2);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('rx',Math.min(12,h/3));r.setAttribute('class','slot-rect'+(text?' filled':'')+(!active&&text?' locked':''));g.appendChild(r);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('class',text?'node-text':'hint-text');t.setAttribute('style','font-size:'+fs+'px');t.textContent=text||'ここ';g.appendChild(t);svg.appendChild(g)}
+function nextQuestion(){idx=(idx+1)%problems.length;init()} function resetQuestion(){init()} function jumpQuestion(){idx=Number(document.getElementById('problemSelect').value);init()}
+setupSelect();init();
+</script>
+</body>
+</html>
